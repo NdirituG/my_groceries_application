@@ -1,22 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:my_groceries_application/provider/dark_theme_provider.dart';
-import 'package:my_groceries_application/screens/btm_bar.dart';
-import 'package:my_groceries_application/screens/home_screen.dart';
 import 'package:provider/provider.dart';
 
-import 'screens/consts/theme_data.dart';
+import 'consts/theme_data.dart';
+import 'screens/btm_bar.dart';
 
 void main() {
-  WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
-      .then((_) {
-    runApp(MyApp());
-  });
+  runApp(const MyApp());
 }
 
 class MyApp extends StatefulWidget {
-  MyApp({super.key});
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -25,7 +19,6 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   DarkThemeProvider themeChangeProvider = DarkThemeProvider();
 
-  // This widget is the root of your application.
   void getCurrentAppTheme() async {
     themeChangeProvider.setDarkTheme =
         await themeChangeProvider.darkThemePrefs.getTheme();
@@ -51,7 +44,7 @@ class _MyAppState extends State<MyApp> {
             debugShowCheckedModeBanner: false,
             title: 'Flutter Demo',
             theme: Styles.themeData(themeProvider.getDarkTheme, context),
-            home: BottomBarScreen());
+            home: const BottomBarScreen());
       }),
     );
   }

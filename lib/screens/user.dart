@@ -1,15 +1,13 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
+import 'package:my_groceries_application/widgets/text_widget.dart';
 import 'package:provider/provider.dart';
 
 import '../provider/dark_theme_provider.dart';
-import '../widgets/text_widget.dart';
 
 class UserScreen extends StatefulWidget {
-  const UserScreen({super.key});
+  const UserScreen({Key? key}) : super(key: key);
 
   @override
   State<UserScreen> createState() => _UserScreenState();
@@ -24,6 +22,7 @@ class _UserScreenState extends State<UserScreen> {
     super.dispose();
   }
 
+  @override
   Widget build(BuildContext context) {
     final themeState = Provider.of<DarkThemeProvider>(context);
     final Color color = themeState.getDarkTheme ? Colors.white : Colors.black;
@@ -41,25 +40,26 @@ class _UserScreenState extends State<UserScreen> {
               ),
               RichText(
                 text: TextSpan(
-                    text: 'Hi, ',
-                    style: const TextStyle(
-                      color: Colors.cyan,
-                      fontSize: 27,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    children: <TextSpan>[
-                      TextSpan(
-                          text: 'MyName',
-                          style: TextStyle(
-                            color: color,
-                            fontSize: 25,
-                            fontWeight: FontWeight.w600,
-                          ),
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = () {
-                              print("My name is pressed");
-                            }),
-                    ]),
+                  text: 'Hi, ',
+                  style: const TextStyle(
+                    color: Colors.cyan,
+                    fontSize: 27,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  children: <TextSpan>[
+                    TextSpan(
+                        text: 'MyName',
+                        style: TextStyle(
+                          color: color,
+                          fontSize: 25,
+                          fontWeight: FontWeight.w600,
+                        ),
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () {
+                            print('My name is pressed');
+                          }),
+                  ],
+                ),
               ),
               const SizedBox(
                 height: 5,
@@ -68,7 +68,7 @@ class _UserScreenState extends State<UserScreen> {
                 text: 'Email@email.com',
                 color: color,
                 textSize: 18,
-                //isTitle: true,
+                // isTitle: true,
               ),
               const SizedBox(
                 height: 20,
@@ -84,7 +84,7 @@ class _UserScreenState extends State<UserScreen> {
                 subtitle: 'My subtitle',
                 icon: IconlyLight.profile,
                 onPressed: () async {
-                  await _showAddressDialog();
+                  _showAddressDialog();
                 },
                 color: color,
               ),
@@ -96,7 +96,7 @@ class _UserScreenState extends State<UserScreen> {
               ),
               _listTiles(
                 title: 'Wishlist',
-                icon: IconlyLight.bag,
+                icon: IconlyLight.heart,
                 onPressed: () {},
                 color: color,
               ),
@@ -107,8 +107,8 @@ class _UserScreenState extends State<UserScreen> {
                 color: color,
               ),
               _listTiles(
-                title: 'Forget password',
-                icon: IconlyLight.show,
+                title: 'Forgot password',
+                icon: IconlyLight.unlock,
                 onPressed: () {},
                 color: color,
               ),
@@ -116,8 +116,8 @@ class _UserScreenState extends State<UserScreen> {
                 title: TextWidget(
                   text: themeState.getDarkTheme ? 'Dark mode' : 'Light mode',
                   color: color,
-                  textSize: 20,
-                  //isTitle: true,
+                  textSize: 18,
+                  // isTitle: true,
                 ),
                 secondary: Icon(themeState.getDarkTheme
                     ? Icons.dark_mode_outlined
@@ -132,9 +132,12 @@ class _UserScreenState extends State<UserScreen> {
               _listTiles(
                 title: 'Logout',
                 icon: IconlyLight.logout,
-                onPressed: () {},
+                onPressed: () {
+                  _showLogoutDialog();
+                },
                 color: color,
               ),
+              //  listTileAsRow(),
             ],
           ),
         ),
@@ -142,25 +145,70 @@ class _UserScreenState extends State<UserScreen> {
     ));
   }
 
+  Future<void> _showLogoutDialog() async {
+    await showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Row(children: [
+              Image.asset(
+                'assets/images/logout_one.png',
+                height: 20,
+                width: 20,
+                fit: BoxFit.fill,
+              ),
+              const SizedBox(
+                width: 8,
+              ),
+              const Text('Sign Out'),
+            ]),
+            content: const Text('Do you wanna sign out?'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  if (Navigator.canPop(context)) {
+                    Navigator.pop(context);
+                  }
+                },
+                child: TextWidget(
+                  color: Colors.cyan,
+                  text: 'Cancel',
+                  textSize: 18,
+                ),
+              ),
+              TextButton(
+                onPressed: () {},
+                child: TextWidget(
+                  color: Colors.red,
+                  text: 'OK',
+                  textSize: 18,
+                ),
+              ),
+            ],
+          );
+        });
+  }
+
   Future<void> _showAddressDialog() async {
     await showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: const Text("Update"),
+            title: const Text('Update'),
             content: TextField(
-              //onChanged: (value) {
-              //  print('_addressTextController.text ${_addressTextController.text}');
-              //},
+              onChanged: (value) {
+                print(
+                    "_addressTextController.text ${_addressTextController.text}");
+              },
               controller: _addressTextController,
               maxLines: 5,
-              decoration: const InputDecoration(hintText: "Your address"),
+              decoration: const InputDecoration(hintText: "Your Address"),
             ),
             actions: [
               TextButton(
                 onPressed: () {},
                 child: const Text('Update'),
-              ),
+              )
             ],
           );
         });
@@ -178,7 +226,7 @@ class _UserScreenState extends State<UserScreen> {
         text: title,
         color: color,
         textSize: 22,
-        //isTitle: true,
+        // isTitle: true,
       ),
       subtitle: TextWidget(
         text: subtitle == null ? "" : subtitle,
@@ -192,4 +240,26 @@ class _UserScreenState extends State<UserScreen> {
       },
     );
   }
+
+// Alternative code for the listTile.
+  /* Widget listTileAsRow() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
+        children: <Widget>[
+          const Icon(Icons.settings),
+          const SizedBox(width: 10),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: const [
+              Text('Title'),
+              Text('Subtitle'),
+            ],
+          ),
+          const Spacer(),
+          const Icon(Icons.chevron_right)
+        ],
+      ),
+    );
+  } */
 }
