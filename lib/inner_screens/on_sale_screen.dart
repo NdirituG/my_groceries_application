@@ -4,6 +4,7 @@ import 'package:my_groceries_application/widgets/on_sale_widget.dart';
 import 'package:my_groceries_application/widgets/text_widget.dart';
 
 import '../services/utils.dart';
+import '../widgets/back_widget.dart';
 
 class OnSaleScreen extends StatelessWidget {
   static const routeName = "/OnSaleScreen";
@@ -17,16 +18,7 @@ class OnSaleScreen extends StatelessWidget {
     Size size = Utils(context).getScreenSize;
     return Scaffold(
       appBar: AppBar(
-        leading: InkWell(
-          borderRadius: BorderRadius.circular(12),
-          onTap: () {
-            Navigator.pop(context);
-          },
-          child: Icon(
-            IconlyLight.arrowLeft2,
-            color: color,
-          ),
-        ),
+        leading: const BackWidget(),
         elevation: 0,
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         title: TextWidget(

@@ -9,6 +9,7 @@ import 'package:my_groceries_application/widgets/feed_items.dart';
 import 'package:my_groceries_application/widgets/text_widget.dart';
 import 'package:provider/provider.dart';
 
+import '../inner_screens/feeds_screen.dart';
 import '../widgets/on_sale_widget.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -126,7 +127,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   //const Spacer(),
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      GlobalMethods.navigateTo(
+                          ctx: context, routeName: FeedsScreen.routeName);
+                    },
                     child: TextWidget(
                       text: 'Browse all',
                       maxLines: 1,

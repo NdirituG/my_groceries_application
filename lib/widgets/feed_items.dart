@@ -60,7 +60,7 @@ class _FeedsWidgetState extends State<FeedsWidget> {
                       textSize: 20,
                       isTitle: true,
                     ),
-                    HeartBTN(),
+                    const HeartBTN(),
                   ],
                 ),
               ),
@@ -79,17 +79,20 @@ class _FeedsWidgetState extends State<FeedsWidget> {
                       ),
                     ),
                     const SizedBox(
-                      width: 8,
+                      width: 3,
                     ),
                     Flexible(
                       child: Row(
                         children: [
-                          FittedBox(
-                            child: TextWidget(
-                              text: 'Kg',
-                              color: color,
-                              textSize: 18,
-                              isTitle: true,
+                          Flexible(
+                            flex: 3,
+                            child: FittedBox(
+                              child: TextWidget(
+                                text: 'Kg',
+                                color: color,
+                                textSize: 18,
+                                isTitle: true,
+                              ),
                             ),
                           ),
                           const SizedBox(
