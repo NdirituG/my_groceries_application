@@ -1,6 +1,8 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
+import 'package:my_groceries_application/screens/orders/orders_screen.dart';
+import 'package:my_groceries_application/screens/viewed_recently/viewed_recently.dart';
 import 'package:my_groceries_application/screens/wishlist/wishlist_screen.dart';
 import 'package:my_groceries_application/services/global_methods.dart';
 import 'package:my_groceries_application/widgets/text_widget.dart';
@@ -93,7 +95,10 @@ class _UserScreenState extends State<UserScreen> {
               _listTiles(
                 title: 'Orders',
                 icon: IconlyLight.bag,
-                onPressed: () {},
+                onPressed: () {
+                  GlobalMethods.navigateTo(
+                      ctx: context, routeName: OrdersScreen.routeName);
+                },
                 color: color,
               ),
               _listTiles(
@@ -108,7 +113,10 @@ class _UserScreenState extends State<UserScreen> {
               _listTiles(
                 title: 'Viewed',
                 icon: IconlyLight.show,
-                onPressed: () {},
+                onPressed: () {
+                  GlobalMethods.navigateTo(
+                      ctx: context, routeName: ViewedRecentlyScreen.routeName);
+                },
                 color: color,
               ),
               _listTiles(
@@ -138,7 +146,11 @@ class _UserScreenState extends State<UserScreen> {
                 title: 'Logout',
                 icon: IconlyLight.logout,
                 onPressed: () {
-                  _showLogoutDialog();
+                  GlobalMethods.warningDialog(
+                      title: 'Sign out',
+                      subtitle: 'Would you like to sign out?',
+                      fct: () {},
+                      context: context);
                 },
                 color: color,
               ),
@@ -148,50 +160,6 @@ class _UserScreenState extends State<UserScreen> {
         ),
       ),
     ));
-  }
-
-  Future<void> _showLogoutDialog() async {
-    await showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Row(children: [
-              Image.asset(
-                'assets/images/logout_one.png',
-                height: 20,
-                width: 20,
-                fit: BoxFit.fill,
-              ),
-              const SizedBox(
-                width: 8,
-              ),
-              const Text('Sign Out'),
-            ]),
-            content: const Text('Do you wanna sign out?'),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  if (Navigator.canPop(context)) {
-                    Navigator.pop(context);
-                  }
-                },
-                child: TextWidget(
-                  color: Colors.cyan,
-                  text: 'Cancel',
-                  textSize: 18,
-                ),
-              ),
-              TextButton(
-                onPressed: () {},
-                child: TextWidget(
-                  color: Colors.red,
-                  text: 'OK',
-                  textSize: 18,
-                ),
-              ),
-            ],
-          );
-        });
   }
 
   Future<void> _showAddressDialog() async {
