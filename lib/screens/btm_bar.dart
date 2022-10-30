@@ -5,9 +5,11 @@ import 'package:my_groceries_application/screens/categories.dart';
 import 'package:my_groceries_application/screens/home_screen.dart';
 import 'package:my_groceries_application/screens/user.dart';
 import 'package:my_groceries_application/widgets/text_widget.dart';
+
 import 'package:provider/provider.dart';
 
 import '../provider/dark_theme_provider.dart';
+import '../providers/cart_provider.dart';
 import 'cart/cart_screen.dart';
 
 class BottomBarScreen extends StatefulWidget {
@@ -20,10 +22,22 @@ class BottomBarScreen extends StatefulWidget {
 class _BottomBarScreenState extends State<BottomBarScreen> {
   int _selectedIndex = 0;
   final List<Map<String, dynamic>> _pages = [
-    {'page': const HomeScreen(), 'title': 'Home Screen'},
-    {'page': CategoriesScreen(), 'title': 'Categories Screen'},
-    {'page': const CartScreen(), 'title': 'Cart Screen'},
-    {'page': const UserScreen(), 'title': 'user Screen'},
+    {
+      'page': const HomeScreen(),
+      'title': 'Home Screen',
+    },
+    {
+      'page': CategoriesScreen(),
+      'title': 'Categories Screen',
+    },
+    {
+      'page': const CartScreen(),
+      'title': 'Cart Screen',
+    },
+    {
+      'page': const UserScreen(),
+      'title': 'user Screen',
+    },
   ];
   void _selectedPage(int index) {
     setState(() {
@@ -34,6 +48,7 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
   @override
   Widget build(BuildContext context) {
     final themeState = Provider.of<DarkThemeProvider>(context);
+
     bool _isDark = themeState.getDarkTheme;
     return Scaffold(
       // appBar: AppBar(
@@ -62,21 +77,22 @@ class _BottomBarScreenState extends State<BottomBarScreen> {
             label: "Categories",
           ),
           BottomNavigationBarItem(
-            icon: Badge(
+            icon: Consumer<CartProvider>(builder: (_, myCart, ch) {
+              return Badge(
                 toAnimate: true,
                 shape: BadgeShape.circle,
                 badgeColor: Colors.blue,
                 borderRadius: BorderRadius.circular(8),
                 position: BadgePosition.topEnd(top: -7, end: -7),
                 badgeContent: FittedBox(
-                  child: TextWidget(
-                    text: '1',
-                    color: Colors.white,
-                    textSize: 12,
-                  ),
-                ),
+                    child: TextWidget(
+                        text: myCart.getCartItems.length.toString(),
+                        color: Colors.white,
+                        textSize: 15)),
                 child: Icon(
-                    _selectedIndex == 2 ? IconlyBold.buy : IconlyLight.buy)),
+                    _selectedIndex == 2 ? IconlyBold.buy : IconlyLight.buy),
+              );
+            }),
             label: "Cart",
           ),
           BottomNavigationBarItem(

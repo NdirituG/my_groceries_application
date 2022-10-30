@@ -3,54 +3,82 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
-import 'package:my_groceries_application/services/utils.dart';
+
 import 'package:my_groceries_application/widgets/heart_btn.dart';
-import 'package:my_groceries_application/widgets/text_widget.dart';
+import 'package:provider/provider.dart';
+
+import '../providers/cart_provider.dart';
+import '../providers/products_provider.dart';
+import '../providers/viewed_prod_provider.dart';
+import '../providers/wishlist_provider.dart';
+import '../services/utils.dart';
+import '../widgets/text_widget.dart';
 
 class ProductDetails extends StatefulWidget {
   static const routeName = '/ProductDetails';
-  const ProductDetails({super.key});
+
+  const ProductDetails({Key? key}) : super(key: key);
 
   @override
-  State<ProductDetails> createState() => _ProductDetailsState();
+  _ProductDetailsState createState() => _ProductDetailsState();
 }
 
 class _ProductDetailsState extends State<ProductDetails> {
   final _quantityTextController = TextEditingController(text: '1');
+
   @override
   void dispose() {
+    // Clean up the controller when the widget is disposed.
     _quantityTextController.dispose();
     super.dispose();
   }
 
+  @override
   Widget build(BuildContext context) {
     Size size = Utils(context).getScreenSize;
     final Color color = Utils(context).color;
+    final productProvider = Provider.of<ProductsProvider>(context);
+    final cartProvider = Provider.of<CartProvider>(context);
+    final wishlistProvider = Provider.of<WishlistProvider>(context);
+    final productId = ModalRoute.of(context)!.settings.arguments as String;
+    final getCurrProduct = productProvider.findProdById(productId);
+    double usedPrice = getCurrProduct.isOnSale
+        ? getCurrProduct.salePrice
+        : getCurrProduct.price;
+    double totalPrice = usedPrice * int.parse(_quantityTextController.text);
+    bool? _isInCart = cartProvider.getCartItems.containsKey(getCurrProduct.id);
 
-    return Scaffold(
-      appBar: AppBar(
-        leading: InkWell(
-          borderRadius: BorderRadius.circular(12),
-          onTap: () =>
-              Navigator.canPop(context) ? Navigator.pop(context) : null,
-          child: Icon(
-            IconlyLight.arrowLeft2,
-            color: color,
-            size: 24,
-          ),
-        ),
-        elevation: 0,
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-      ),
-      body: Column(
-        children: [
+    bool? _isInWishlist =
+        wishlistProvider.getWishlistItems.containsKey(getCurrProduct.id);
+
+    final viewedProdProvider = Provider.of<ViewedProdProvider>(context);
+    return WillPopScope(
+      onWillPop: () async {
+        viewedProdProvider.addProductToHistory(productId: productId);
+        return true;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+            leading: InkWell(
+              borderRadius: BorderRadius.circular(12),
+              onTap: () =>
+                  Navigator.canPop(context) ? Navigator.pop(context) : null,
+              child: Icon(
+                IconlyLight.arrowLeft2,
+                color: color,
+                size: 24,
+              ),
+            ),
+            elevation: 0,
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor),
+        body: Column(children: [
           Flexible(
             flex: 2,
             child: FancyShimmerImage(
-              imageUrl:
-                  'https://media.istockphoto.com/photos/banana-picture-id1184345169?k=20&m=1184345169&s=612x612&w=0&h=EKwCw7Zx20N3l8G_rQI6KcitWTQ5ahkgmEBr2QA1FMk=',
+              imageUrl: getCurrProduct.imageUrl,
               boxFit: BoxFit.scaleDown,
               width: size.width,
+              // height: screenHeight * .4,
             ),
           ),
           Flexible(
@@ -59,67 +87,64 @@ class _ProductDetailsState extends State<ProductDetails> {
               decoration: BoxDecoration(
                 color: Theme.of(context).cardColor,
                 borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(40),
-                    topRight: Radius.circular(40)),
+                  topLeft: Radius.circular(40),
+                  topRight: Radius.circular(40),
+                ),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(
-                      top: 20,
-                      left: 30,
-                      right: 30,
-                    ),
+                    padding:
+                        const EdgeInsets.only(top: 20, left: 30, right: 30),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Flexible(
                           child: TextWidget(
-                            text: 'title',
+                            text: getCurrProduct.title,
                             color: color,
                             textSize: 25,
                             isTitle: true,
                           ),
                         ),
-                        const HeartBTN(),
+                        HeartBTN(
+                          productId: getCurrProduct.id,
+                          isInWishlist: _isInWishlist,
+                        )
                       ],
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(
-                      top: 20,
-                      left: 30,
-                      right: 30,
-                    ),
+                    padding:
+                        const EdgeInsets.only(top: 20, left: 30, right: 30),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         TextWidget(
-                          text: 'Ksh 50',
+                          text: '\$${usedPrice.toStringAsFixed(2)}',
                           color: Colors.green,
                           textSize: 22,
                           isTitle: true,
                         ),
                         TextWidget(
-                          text: '/Kg',
+                          text: getCurrProduct.isPiece ? '/Piece' : '/Kg',
                           color: color,
-                          textSize: 16,
+                          textSize: 12,
                           isTitle: false,
                         ),
                         const SizedBox(
                           width: 10,
                         ),
                         Visibility(
-                          visible: true,
+                          visible: getCurrProduct.isOnSale ? true : false,
                           child: Text(
-                            "Ksh 100",
+                            'Ksh ${getCurrProduct.price.toStringAsFixed(2)}',
                             style: TextStyle(
-                              fontSize: 15,
-                              color: color,
-                              decoration: TextDecoration.lineThrough,
-                            ),
+                                fontSize: 15,
+                                color: color,
+                                decoration: TextDecoration.lineThrough),
                           ),
                         ),
                         const Spacer(),
@@ -127,12 +152,11 @@ class _ProductDetailsState extends State<ProductDetails> {
                           padding: const EdgeInsets.symmetric(
                               vertical: 4, horizontal: 8),
                           decoration: BoxDecoration(
-                            color: const Color.fromRGBO(63, 200, 101, 1),
-                            borderRadius: BorderRadius.circular(5),
-                          ),
+                              color: const Color.fromRGBO(63, 200, 101, 1),
+                              borderRadius: BorderRadius.circular(5)),
                           child: TextWidget(
                             text: 'Free delivery',
-                            color: color,
+                            color: Colors.white,
                             textSize: 20,
                             isTitle: true,
                           ),
@@ -158,7 +182,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                             });
                           }
                         },
-                        icon: CupertinoIcons.minus_square,
+                        icon: CupertinoIcons.minus,
                         color: Colors.red,
                       ),
                       const SizedBox(
@@ -168,7 +192,8 @@ class _ProductDetailsState extends State<ProductDetails> {
                         flex: 1,
                         child: TextField(
                           controller: _quantityTextController,
-                          key: const ValueKey('Quantity'),
+                          key: const ValueKey('quantity'),
+                          keyboardType: TextInputType.number,
                           maxLines: 1,
                           decoration: const InputDecoration(
                             border: UnderlineInputBorder(),
@@ -177,9 +202,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                           cursorColor: Colors.green,
                           enabled: true,
                           inputFormatters: [
-                            FilteringTextInputFormatter.allow(
-                              RegExp('[0-9]'),
-                            ),
+                            FilteringTextInputFormatter.allow(RegExp('[0-9]')),
                           ],
                           onChanged: (value) {
                             setState(() {
@@ -201,19 +224,16 @@ class _ProductDetailsState extends State<ProductDetails> {
                                     .toString();
                           });
                         },
-                        icon: CupertinoIcons.plus_square,
+                        icon: CupertinoIcons.plus,
                         color: Colors.green,
                       ),
                     ],
                   ),
                   const Spacer(),
                   Container(
-                    //replace size.width with double.infinity
                     width: double.infinity,
                     padding: const EdgeInsets.symmetric(
-                      vertical: 20,
-                      horizontal: 30,
-                    ),
+                        vertical: 20, horizontal: 30),
                     decoration: BoxDecoration(
                       color: Theme.of(context).colorScheme.secondary,
                       borderRadius: const BorderRadius.only(
@@ -241,13 +261,11 @@ class _ProductDetailsState extends State<ProductDetails> {
                                 child: Row(
                                   children: [
                                     TextWidget(
-                                      text: 'Ksh 50/',
+                                      text:
+                                          'Ksh ${totalPrice.toStringAsFixed(2)}/',
                                       color: color,
                                       textSize: 20,
                                       isTitle: true,
-                                    ),
-                                    const SizedBox(
-                                      width: 5,
                                     ),
                                     TextWidget(
                                       text: '${_quantityTextController.text}Kg',
@@ -269,17 +287,25 @@ class _ProductDetailsState extends State<ProductDetails> {
                             color: Colors.green,
                             borderRadius: BorderRadius.circular(10),
                             child: InkWell(
-                              onTap: () {},
+                              onTap: _isInCart
+                                  ? null
+                                  : () {
+                                      // if (_isInCart) {
+                                      //   return;
+                                      // }
+                                      cartProvider.addProductsToCart(
+                                          productId: getCurrProduct.id,
+                                          quantity: int.parse(
+                                              _quantityTextController.text));
+                                    },
                               borderRadius: BorderRadius.circular(10),
                               child: Padding(
-                                padding: const EdgeInsets.all(12.0),
-                                child: TextWidget(
-                                  text: 'Add to cart',
-                                  color: Colors.white,
-                                  textSize: 18,
-                                  isTitle: true,
-                                ),
-                              ),
+                                  padding: const EdgeInsets.all(12.0),
+                                  child: TextWidget(
+                                      text:
+                                          _isInCart ? 'In cart' : 'Add to cart',
+                                      color: Colors.white,
+                                      textSize: 18)),
                             ),
                           ),
                         ),
@@ -289,8 +315,8 @@ class _ProductDetailsState extends State<ProductDetails> {
                 ],
               ),
             ),
-          ),
-        ],
+          )
+        ]),
       ),
     );
   }
@@ -303,19 +329,18 @@ class _ProductDetailsState extends State<ProductDetails> {
         borderRadius: BorderRadius.circular(12),
         color: color,
         child: InkWell(
-          borderRadius: BorderRadius.circular(12),
-          onTap: () {
-            fct();
-          },
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Icon(
-              icon,
-              color: Colors.white,
-              size: 25,
-            ),
-          ),
-        ),
+            borderRadius: BorderRadius.circular(12),
+            onTap: () {
+              fct();
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Icon(
+                icon,
+                color: Colors.white,
+                size: 25,
+              ),
+            )),
       ),
     );
   }

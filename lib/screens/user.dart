@@ -1,14 +1,15 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
+
 import 'package:my_groceries_application/screens/orders/orders_screen.dart';
 import 'package:my_groceries_application/screens/viewed_recently/viewed_recently.dart';
 import 'package:my_groceries_application/screens/wishlist/wishlist_screen.dart';
-import 'package:my_groceries_application/services/global_methods.dart';
 import 'package:my_groceries_application/widgets/text_widget.dart';
 import 'package:provider/provider.dart';
 
 import '../provider/dark_theme_provider.dart';
+import '../services/global_methods.dart';
 
 class UserScreen extends StatefulWidget {
   const UserScreen({Key? key}) : super(key: key);
@@ -44,7 +45,7 @@ class _UserScreenState extends State<UserScreen> {
               ),
               RichText(
                 text: TextSpan(
-                  text: 'Hi, ',
+                  text: 'Hi,  ',
                   style: const TextStyle(
                     color: Colors.cyan,
                     fontSize: 27,
@@ -88,7 +89,7 @@ class _UserScreenState extends State<UserScreen> {
                 subtitle: 'My subtitle',
                 icon: IconlyLight.profile,
                 onPressed: () async {
-                  _showAddressDialog();
+                  await _showAddressDialog();
                 },
                 color: color,
               ),
@@ -120,7 +121,7 @@ class _UserScreenState extends State<UserScreen> {
                 color: color,
               ),
               _listTiles(
-                title: 'Forgot password',
+                title: 'Forget password',
                 icon: IconlyLight.unlock,
                 onPressed: () {},
                 color: color,
@@ -148,13 +149,13 @@ class _UserScreenState extends State<UserScreen> {
                 onPressed: () {
                   GlobalMethods.warningDialog(
                       title: 'Sign out',
-                      subtitle: 'Would you like to sign out?',
+                      subtitle: 'Do you wanna sign out?',
                       fct: () {},
                       context: context);
                 },
                 color: color,
               ),
-              //  listTileAsRow(),
+              // listTileAsRow(),
             ],
           ),
         ),
@@ -169,19 +170,18 @@ class _UserScreenState extends State<UserScreen> {
           return AlertDialog(
             title: const Text('Update'),
             content: TextField(
-              onChanged: (value) {
-                print(
-                    "_addressTextController.text ${_addressTextController.text}");
-              },
+              // onChanged: (value) {
+              //   print('_addressTextController.text ${_addressTextController.text}');
+              // },
               controller: _addressTextController,
               maxLines: 5,
-              decoration: const InputDecoration(hintText: "Your Address"),
+              decoration: const InputDecoration(hintText: "Your address"),
             ),
             actions: [
               TextButton(
                 onPressed: () {},
                 child: const Text('Update'),
-              )
+              ),
             ],
           );
         });
@@ -214,25 +214,25 @@ class _UserScreenState extends State<UserScreen> {
     );
   }
 
-// Alternative code for the listTile.
-  /* Widget listTileAsRow() {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Row(
-        children: <Widget>[
-          const Icon(Icons.settings),
-          const SizedBox(width: 10),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: const [
-              Text('Title'),
-              Text('Subtitle'),
-            ],
-          ),
-          const Spacer(),
-          const Icon(Icons.chevron_right)
-        ],
-      ),
-    );
-  } */
+// // Alternative code for the listTile.
+//   Widget listTileAsRow() {
+//     return Padding(
+//       padding: const EdgeInsets.all(8.0),
+//       child: Row(
+//         children: <Widget>[
+//           const Icon(Icons.settings),
+//           const SizedBox(width: 10),
+//           Column(
+//             crossAxisAlignment: CrossAxisAlignment.start,
+//             children: const [
+//               Text('Title'),
+//               Text('Subtitle'),
+//             ],
+//           ),
+//           const Spacer(),
+//           const Icon(Icons.chevron_right)
+//         ],
+//       ),
+//     );
+//   }
 }

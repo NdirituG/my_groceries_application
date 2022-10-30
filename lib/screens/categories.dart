@@ -5,43 +5,30 @@ import 'package:my_groceries_application/widgets/text_widget.dart';
 
 class CategoriesScreen extends StatelessWidget {
   CategoriesScreen({Key? key}) : super(key: key);
-  //list of colors
+
   List<Color> gridColors = [
-    const Color.fromARGB(255, 212, 88, 51),
+    const Color(0xff53B175),
     const Color(0xffF8A44C),
-    const Color.fromARGB(255, 150, 92, 79),
-    const Color.fromARGB(255, 199, 23, 53),
+    const Color(0xffF7A593),
+    const Color(0xffD3B0E0),
     const Color(0xffFDE598),
     const Color(0xffB7DFF5),
   ];
-  //the map is created below
+
   List<Map<String, dynamic>> catInfo = [
     {
-      'imgPath': 'assets/images/cat/fruitsOne.png',
+      'imgPath': 'assets/images/pineAppleOne.png',
       'catText': 'Fruits',
     },
     {
-      'imgPath': 'assets/images/cat/grainsOne.png',
+      'imgPath': 'assets/images/yellowBeansOne.png',
       'catText': 'Grains',
     },
     {
-      'imgPath': 'assets/images/cat/legumesOne.png',
-      'catText': 'Legumes',
-    },
-    {
-      'imgPath': 'assets/images/cat/meatOne.png',
-      'catText': 'Meat',
-    },
-    {
-      'imgPath': 'assets/images/cat/SpicesOne.png',
-      'catText': 'Spices',
-    },
-    {
-      'imgPath': 'assets/images/cat/vegetablesOne.png',
+      'imgPath': 'assets/images/cabbageOne.png',
       'catText': 'Vegetables',
     },
   ];
-
   @override
   Widget build(BuildContext context) {
     final utils = Utils(context);
@@ -62,18 +49,13 @@ class CategoriesScreen extends StatelessWidget {
           child: GridView.count(
             crossAxisCount: 2,
             childAspectRatio: 240 / 250,
-            crossAxisSpacing: 10, //Vertical spacing
-            mainAxisSpacing: 10, //horizontal spacing
-            children: List.generate(6, (index) {
-              //after changing the parameters, color, catText and ImgPath
-              //we pass the parameters from here
+            crossAxisSpacing: 10, // Vertical spacing
+            mainAxisSpacing: 10, // Horizontal spacing
+            children: List.generate(3, (index) {
               return CategoriesWidget(
-                //the widget is initially empty, then added this
                 catText: catInfo[index]['catText'],
                 imgPath: catInfo[index]['imgPath'],
                 passedColor: gridColors[index],
-                //for catText and imgPath, initialize a map like
-                //for the btmBar.dart
               );
             }),
           ),

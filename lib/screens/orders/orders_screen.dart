@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:my_groceries_application/widgets/back_widget.dart';
+import 'package:my_groceries_application/widgets/empty_screen.dart';
 
 import '../../services/utils.dart';
-import '../../widgets/back_widget.dart';
-import '../../widgets/empty_screen.dart';
 import '../../widgets/text_widget.dart';
 import 'orders_widget.dart';
 
 class OrdersScreen extends StatefulWidget {
-  static const routeName = '/OrdersScreen';
+  static const routeName = '/OrderScreen';
 
   const OrdersScreen({Key? key}) : super(key: key);
 
@@ -23,10 +23,11 @@ class _OrdersScreenState extends State<OrdersScreen> {
     bool _isEmpty = true;
     return _isEmpty == true
         ? const EmptyScreen(
-            title: 'Your have not placed ay orders yet',
-            subtitle: 'Head over to the products sections and make a purchase',
+            title: 'You have not place any order yet',
+            subtitle:
+                'Head over to the products section and make a purchase :)',
             buttonText: 'Shop now',
-            imgPath: 'assets/images/make_purchase.png',
+            imagePath: 'assets/images/make_purchase.png',
           )
         : Scaffold(
             appBar: AppBar(

@@ -1,18 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:my_groceries_application/inner_screens/feeds_screen.dart';
 import 'package:my_groceries_application/inner_screens/on_sale_screen.dart';
-import 'package:my_groceries_application/inner_screens/products_details.dart';
 import 'package:my_groceries_application/provider/dark_theme_provider.dart';
+import 'package:my_groceries_application/providers/products_provider.dart';
+import 'package:my_groceries_application/providers/viewed_prod_provider.dart';
 import 'package:my_groceries_application/screens/auth/forgot_pass.dart';
-import 'package:my_groceries_application/screens/auth/login.dart';
-import 'package:my_groceries_application/screens/auth/register.dart';
-import 'package:my_groceries_application/screens/orders/orders_screen.dart';
 import 'package:my_groceries_application/screens/viewed_recently/viewed_recently.dart';
-import 'package:my_groceries_application/screens/wishlist/wishlist_screen.dart';
 import 'package:provider/provider.dart';
 
 import 'consts/theme_data.dart';
+import 'inner_screens/cat_screen.dart';
+import 'inner_screens/feeds_screen.dart';
+import 'inner_screens/product_details.dart';
+import 'providers/cart_provider.dart';
+import 'providers/wishlist_provider.dart';
+
+import 'screens/auth/login.dart';
+import 'screens/auth/register.dart';
 import 'screens/btm_bar.dart';
+import 'screens/orders/orders_screen.dart';
+import 'screens/wishlist/wishlist_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -45,27 +51,40 @@ class _MyAppState extends State<MyApp> {
       providers: [
         ChangeNotifierProvider(create: (_) {
           return themeChangeProvider;
-        })
+        }),
+        ChangeNotifierProvider(
+          create: (_) => ProductsProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => CartProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => WishlistProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => ViewedProdProvider(),
+        ),
       ],
       child:
           Consumer<DarkThemeProvider>(builder: (context, themeProvider, child) {
         return MaterialApp(
             debugShowCheckedModeBanner: false,
-            title: 'My Grocery App',
+            title: 'Flutter Demo',
             theme: Styles.themeData(themeProvider.getDarkTheme, context),
             home: const BottomBarScreen(),
             routes: {
-              OnSaleScreen.routeName: (context) => const OnSaleScreen(),
-              FeedsScreen.routeName: (context) => const FeedsScreen(),
-              ProductDetails.routeName: (context) => const ProductDetails(),
-              WishlistScreen.routeName: (context) => const WishlistScreen(),
-              OrdersScreen.routeName: (context) => const OrdersScreen(),
-              ViewedRecentlyScreen.routeName: (context) =>
+              OnSaleScreen.routeName: (ctx) => const OnSaleScreen(),
+              FeedsScreen.routeName: (ctx) => const FeedsScreen(),
+              ProductDetails.routeName: (ctx) => const ProductDetails(),
+              WishlistScreen.routeName: (ctx) => const WishlistScreen(),
+              OrdersScreen.routeName: (ctx) => const OrdersScreen(),
+              ViewedRecentlyScreen.routeName: (ctx) =>
                   const ViewedRecentlyScreen(),
-              RegisterScreen.routeName: (context) => const RegisterScreen(),
-              LoginScreen.routeName: (context) => const LoginScreen(),
+              RegisterScreen.routeName: (ctx) => const RegisterScreen(),
+              LoginScreen.routeName: (ctx) => const LoginScreen(),
               ForgetPasswordScreen.routeName: (ctx) =>
                   const ForgetPasswordScreen(),
+              CategoryScreen.routeName: (ctx) => const CategoryScreen(),
             });
       }),
     );

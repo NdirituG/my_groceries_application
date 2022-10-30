@@ -3,15 +3,15 @@ import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
-
 import 'package:my_groceries_application/consts/consts.dart';
+
 import 'package:my_groceries_application/screens/auth/forgot_pass.dart';
+import 'package:my_groceries_application/screens/auth/login.dart';
 
 import '../../services/global_methods.dart';
 import '../../services/utils.dart';
 import '../../widgets/auth_button.dart';
 import '../../widgets/text_widget.dart';
-import 'login.dart';
 
 class RegisterScreen extends StatefulWidget {
   static const routeName = '/RegisterScreen';

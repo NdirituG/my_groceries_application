@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:my_groceries_application/screens/cart/cart_widget.dart';
-import 'package:my_groceries_application/widgets/empty_screen.dart';
 import 'package:my_groceries_application/widgets/text_widget.dart';
+import 'package:provider/provider.dart';
 
+import '../../providers/cart_provider.dart';
 import '../../services/global_methods.dart';
 import '../../services/utils.dart';
-import '../../widgets/back_widget.dart';
+import '../../widgets/empty_screen.dart';
 
 class CartScreen extends StatelessWidget {
   const CartScreen({Key? key}) : super(key: key);
@@ -15,31 +16,35 @@ class CartScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final Color color = Utils(context).color;
     Size size = Utils(context).getScreenSize;
-    bool _isEmpty = true;
-    return _isEmpty
+    final cartProvider = Provider.of<CartProvider>(context);
+    final cartItemsList =
+        cartProvider.getCartItems.values.toList().reversed.toList();
+    return cartItemsList.isEmpty
         ? const EmptyScreen(
             title: 'Your cart is empty',
-            subtitle: 'You can browse products and add them here.',
+            subtitle: 'Add something and make me happy :)',
             buttonText: 'Shop now',
-            imgPath: 'assets/images/cartEmpty.png',
+            imagePath: 'assets/images/emptyOne.png',
           )
         : Scaffold(
             appBar: AppBar(
                 elevation: 0,
                 backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                 title: TextWidget(
-                  text: 'Cart(2)',
+                  text: 'Cart (${cartItemsList.length})',
                   color: color,
-                  textSize: 22,
                   isTitle: true,
+                  textSize: 22,
                 ),
                 actions: [
                   IconButton(
                     onPressed: () {
                       GlobalMethods.warningDialog(
-                          title: 'Empty your cart',
+                          title: 'Empty your cart?',
                           subtitle: 'Are you sure?',
-                          fct: () {},
+                          fct: () {
+                            cartProvider.clearCart();
+                          },
                           context: context);
                     },
                     icon: Icon(
@@ -53,10 +58,15 @@ class CartScreen extends StatelessWidget {
                 _checkout(ctx: context),
                 Expanded(
                   child: ListView.builder(
-                      itemCount: 10,
-                      itemBuilder: (ctx, index) {
-                        return CartWidget();
-                      }),
+                    itemCount: cartItemsList.length,
+                    itemBuilder: (ctx, index) {
+                      return ChangeNotifierProvider.value(
+                          value: cartItemsList[index],
+                          child: CartWidget(
+                            q: cartItemsList[index].quantity,
+                          ));
+                    },
+                  ),
                 ),
               ],
             ),
@@ -69,37 +79,36 @@ class CartScreen extends StatelessWidget {
     return SizedBox(
       width: double.infinity,
       height: size.height * 0.1,
+      // color: ,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12),
-        child: Row(
-          children: [
-            Material(
-              color: Colors.green,
+        child: Row(children: [
+          Material(
+            color: Colors.green,
+            borderRadius: BorderRadius.circular(10),
+            child: InkWell(
               borderRadius: BorderRadius.circular(10),
-              child: InkWell(
-                borderRadius: BorderRadius.circular(10),
-                onTap: () {},
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextWidget(
-                    text: 'Order Now',
-                    color: Colors.white,
-                    textSize: 20,
-                  ),
+              onTap: () {},
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextWidget(
+                  text: 'Order Now',
+                  textSize: 20,
+                  color: Colors.white,
                 ),
               ),
             ),
-            const Spacer(),
-            FittedBox(
-              child: TextWidget(
-                text: 'Total: Ksh. 540',
-                color: color,
-                textSize: 18,
-                isTitle: true,
-              ),
+          ),
+          const Spacer(),
+          FittedBox(
+            child: TextWidget(
+              text: 'Total: Ksh 1000',
+              color: color,
+              textSize: 18,
+              isTitle: true,
             ),
-          ],
-        ),
+          ),
+        ]),
       ),
     );
   }
