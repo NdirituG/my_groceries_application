@@ -53,7 +53,7 @@ class _MyAppState extends State<MyApp> {
             debugShowCheckedModeBanner: false,
             title: 'My Grocery App',
             theme: Styles.themeData(themeProvider.getDarkTheme, context),
-            home: const LoginScreen(),
+            home: const BottomBarScreen(),
             routes: {
               OnSaleScreen.routeName: (context) => const OnSaleScreen(),
               FeedsScreen.routeName: (context) => const FeedsScreen(),
