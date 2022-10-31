@@ -60,7 +60,7 @@ class _CartWidgetState extends State<CartWidget> {
               padding: const EdgeInsets.all(3.0),
               child: Container(
                 decoration: BoxDecoration(
-                  color: Theme.of(context).cardColor.withOpacity(0.3),
+                  color: Theme.of(context).cardColor.withOpacity(0.5),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Row(
@@ -180,7 +180,7 @@ class _CartWidgetState extends State<CartWidget> {
                             isInWishlist: _isInWishlist,
                           ),
                           TextWidget(
-                            text: '\$${usedPrice.toStringAsFixed(2)}',
+                            text: 'Ksh ${usedPrice.toStringAsFixed(2)}',
                             color: color,
                             textSize: 18,
                             maxLines: 1,

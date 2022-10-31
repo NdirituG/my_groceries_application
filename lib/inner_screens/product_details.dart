@@ -123,7 +123,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         TextWidget(
-                          text: '\$${usedPrice.toStringAsFixed(2)}',
+                          text: 'Ksh ${usedPrice.toStringAsFixed(2)}',
                           color: Colors.green,
                           textSize: 22,
                           isTitle: true,
@@ -150,7 +150,7 @@ class _ProductDetailsState extends State<ProductDetails> {
                         const Spacer(),
                         Container(
                           padding: const EdgeInsets.symmetric(
-                              vertical: 4, horizontal: 8),
+                              vertical: 4, horizontal: 6),
                           decoration: BoxDecoration(
                               color: const Color.fromRGBO(63, 200, 101, 1),
                               borderRadius: BorderRadius.circular(5)),
