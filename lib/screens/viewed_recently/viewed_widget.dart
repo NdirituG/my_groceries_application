@@ -1,6 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
+import 'package:my_groceries_application/consts/firebase_const.dart';
 
 import 'package:my_groceries_application/inner_screens/product_details.dart';
 import 'package:my_groceries_application/models/viewed_model.dart';
@@ -39,8 +41,9 @@ class _ViewedRecentlyWidgetState extends State<ViewedRecentlyWidget> {
       padding: const EdgeInsets.all(8.0),
       child: GestureDetector(
         onTap: () {
-          GlobalMethods.navigateTo(
-              ctx: context, routeName: ProductDetails.routeName);
+          //GlobalMethods.navigateTo(
+          //ctx: context, routeName: ProductDetails.routeName);
+          //ndiritu
         },
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -67,7 +70,7 @@ class _ViewedRecentlyWidgetState extends State<ViewedRecentlyWidget> {
                   height: 12,
                 ),
                 TextWidget(
-                  text: '\$${usedPrice.toStringAsFixed(2)}',
+                  text: 'Ksh ${usedPrice.toStringAsFixed(2)}',
                   color: color,
                   textSize: 20,
                   isTitle: false,
@@ -85,6 +88,14 @@ class _ViewedRecentlyWidgetState extends State<ViewedRecentlyWidget> {
                     onTap: _isInCart
                         ? null
                         : () {
+                            final User? user = authInstance.currentUser;
+                            //print('user id is ${user!.uid}');
+                            if (user == null) {
+                              GlobalMethods.errorDialog(
+                                  subtitle: 'No user found, Please login first',
+                                  context: context);
+                              return;
+                            }
                             cartProvider.addProductsToCart(
                               productId: getCurrProduct.id,
                               quantity: 1,

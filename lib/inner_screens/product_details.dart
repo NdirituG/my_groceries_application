@@ -1,8 +1,11 @@
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
+import 'package:my_groceries_application/consts/firebase_const.dart';
+import 'package:my_groceries_application/services/global_methods.dart';
 
 import 'package:my_groceries_application/widgets/heart_btn.dart';
 import 'package:provider/provider.dart';
@@ -293,6 +296,16 @@ class _ProductDetailsState extends State<ProductDetails> {
                                       // if (_isInCart) {
                                       //   return;
                                       // }
+                                      final User? user =
+                                          authInstance.currentUser;
+                                      //print('user id is ${user!.uid}');
+                                      if (user == null) {
+                                        GlobalMethods.errorDialog(
+                                            subtitle:
+                                                'No user found, Please login first',
+                                            context: context);
+                                        return;
+                                      }
                                       cartProvider.addProductsToCart(
                                           productId: getCurrProduct.id,
                                           quantity: int.parse(
