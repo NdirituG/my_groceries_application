@@ -84,7 +84,10 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
               itemBuilder: (BuildContext context, int index) {
                 return Image.asset(
                   Consts.authImagesPaths[index],
+                  //changed this
+                  //fit: BoxFit.cover,
                   fit: BoxFit.cover,
+                  height: double.infinity,
                 );
               },
               autoplay: true,

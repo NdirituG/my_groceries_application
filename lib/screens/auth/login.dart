@@ -4,6 +4,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:my_groceries_application/consts/consts.dart';
 import 'package:my_groceries_application/consts/firebase_const.dart';
+import 'package:my_groceries_application/fetch_screen.dart';
 import 'package:my_groceries_application/screens/auth/forgot_pass.dart';
 import 'package:my_groceries_application/screens/auth/register.dart';
 import 'package:my_groceries_application/screens/btm_bar.dart';
@@ -59,7 +60,7 @@ class _LoginScreenState extends State<LoginScreen> {
             email: _emailTextController.text.toLowerCase().trim(),
             password: _passTextController.text.trim());
         Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (context) => const BottomBarScreen(),
+          builder: (context) => const FetchScreen(),
         ));
         print('Successfully logged in');
       } on FirebaseException catch (error) {
@@ -93,7 +94,10 @@ class _LoginScreenState extends State<LoginScreen> {
             itemBuilder: (BuildContext context, int index) {
               return Image.asset(
                 Consts.authImagesPaths[index],
+                //changed this
+                //fit: BoxFit.cover,
                 fit: BoxFit.cover,
+                height: double.infinity,
               );
             },
             autoplay: true,

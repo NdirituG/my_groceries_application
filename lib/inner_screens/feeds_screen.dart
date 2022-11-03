@@ -28,6 +28,15 @@ class _FeedsScreenState extends State<FeedsScreen> {
     super.dispose();
   }
 
+  //code for getting products
+  //@override
+  //void initState() {
+  //final productsProvider =
+  //Provider.of<ProductsProvider>(context, listen: false);
+  //productsProvider.fetchProducts();
+  //super.initState();
+  //}
+
   @override
   Widget build(BuildContext context) {
     final Color color = Utils(context).color;
@@ -70,7 +79,7 @@ class _FeedsScreenState extends State<FeedsScreen> {
                     borderSide:
                         const BorderSide(color: Colors.greenAccent, width: 1),
                   ),
-                  hintText: "What's in your mind",
+                  hintText: "What's on your mind",
                   prefixIcon: const Icon(Icons.search),
                   suffix: IconButton(
                     onPressed: () {
