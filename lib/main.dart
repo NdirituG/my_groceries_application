@@ -55,6 +55,7 @@ class _MyAppState extends State<MyApp> {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const MaterialApp(
+              debugShowCheckedModeBanner: false,
               home: Scaffold(
                 body: Center(
                   child: CircularProgressIndicator(),
@@ -63,6 +64,7 @@ class _MyAppState extends State<MyApp> {
             );
           } else if (snapshot.hasError) {
             return const MaterialApp(
+              debugShowCheckedModeBanner: false,
               home: Scaffold(
                 body: Center(
                   child: Text('An error occured!'),
@@ -92,7 +94,7 @@ class _MyAppState extends State<MyApp> {
                 builder: (context, themeProvider, child) {
               return MaterialApp(
                   debugShowCheckedModeBanner: false,
-                  title: 'Flutter Demo',
+                  title: 'My Digital Shamba',
                   theme: Styles.themeData(themeProvider.getDarkTheme, context),
                   home: const FetchScreen(),
                   routes: {

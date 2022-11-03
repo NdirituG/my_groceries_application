@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:my_groceries_application/consts/consts.dart';
 
 import 'package:my_groceries_application/screens/btm_bar.dart';
 import 'package:provider/provider.dart';
@@ -14,15 +15,19 @@ class FetchScreen extends StatefulWidget {
 }
 
 class _FetchScreenState extends State<FetchScreen> {
+  List<String> images = Consts.authImagesPaths;
   @override
   void initState() {
+    images.shuffle();
     Future.delayed(const Duration(microseconds: 5), () async {
       final productsProvider =
           Provider.of<ProductsProvider>(context, listen: false);
       await productsProvider.fetchProducts();
-      Navigator.of(context).pushReplacement(MaterialPageRoute(
-        builder: (ctx) => const BottomBarScreen(),
-      ));
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (ctx) => BottomBarScreen(),
+        ),
+      );
     });
     super.initState();
   }
@@ -33,7 +38,7 @@ class _FetchScreenState extends State<FetchScreen> {
       body: Stack(
         children: [
           Image.asset(
-            'assets/images/landing/istockphoto-545653582-612x612.jpg',
+            images[0],
             fit: BoxFit.cover,
             height: double.infinity,
           ),

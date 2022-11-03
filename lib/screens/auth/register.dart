@@ -249,7 +249,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           keyboardType: TextInputType.visiblePassword,
                           controller: _passTextController,
                           validator: (value) {
-                            if (value!.isEmpty || value.length < 7) {
+                            if (value!.isEmpty || value.length < 2) {
                               return "Please enter a valid password";
                             } else {
                               return null;
