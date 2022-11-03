@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:my_groceries_application/fetch_screen.dart';
 import 'package:my_groceries_application/inner_screens/on_sale_screen.dart';
 import 'package:my_groceries_application/provider/dark_theme_provider.dart';
 import 'package:my_groceries_application/providers/products_provider.dart';
@@ -93,7 +94,7 @@ class _MyAppState extends State<MyApp> {
                   debugShowCheckedModeBanner: false,
                   title: 'Flutter Demo',
                   theme: Styles.themeData(themeProvider.getDarkTheme, context),
-                  home: const BottomBarScreen(),
+                  home: const FetchScreen(),
                   routes: {
                     OnSaleScreen.routeName: (ctx) => const OnSaleScreen(),
                     FeedsScreen.routeName: (ctx) => const FeedsScreen(),

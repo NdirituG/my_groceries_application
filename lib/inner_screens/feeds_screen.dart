@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_iconly/flutter_iconly.dart';
 import 'package:my_groceries_application/models/products_model.dart';
 import 'package:my_groceries_application/providers/products_provider.dart';
+import 'package:my_groceries_application/widgets/empty_products_widget.dart';
 
 import 'package:provider/provider.dart';
-
 import '../services/utils.dart';
 import '../widgets/back_widget.dart';
 import '../widgets/feed_items.dart';
@@ -28,12 +27,13 @@ class _FeedsScreenState extends State<FeedsScreen> {
     super.dispose();
   }
 
+  List<ProductModel> listProdcutSearch = [];
   @override
   Widget build(BuildContext context) {
     final Color color = Utils(context).color;
     Size size = Utils(context).getScreenSize;
-    final productProviders = Provider.of<ProductsProvider>(context);
-    List<ProductModel> allProducts = productProviders.getProducts;
+    final productsProvider = Provider.of<ProductsProvider>(context);
+    List<ProductModel> allProducts = productsProvider.getProducts;
     return Scaffold(
       appBar: AppBar(
         leading: const BackWidget(),
@@ -57,7 +57,9 @@ class _FeedsScreenState extends State<FeedsScreen> {
                 focusNode: _searchTextFocusNode,
                 controller: _searchTextController,
                 onChanged: (valuee) {
-                  setState(() {});
+                  setState(() {
+                    //listProdcutSearch = productsProvider.searchQuery(valuee);
+                  });
                 },
                 decoration: InputDecoration(
                   focusedBorder: OutlineInputBorder(
@@ -86,20 +88,28 @@ class _FeedsScreenState extends State<FeedsScreen> {
               ),
             ),
           ),
-          GridView.count(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            crossAxisCount: 2,
-            padding: EdgeInsets.zero,
-            // crossAxisSpacing: 10,
-            childAspectRatio: size.width / (size.height * 0.59),
-            children: List.generate(allProducts.length, (index) {
-              return ChangeNotifierProvider.value(
-                value: allProducts[index],
-                child: const FeedsWidget(),
-              );
-            }),
-          ),
+          _searchTextController!.text.isNotEmpty && listProdcutSearch.isEmpty
+              ? const EmptyProdWidget(
+                  text: 'No products found, please try another keyword')
+              : GridView.count(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  crossAxisCount: 2,
+                  padding: EdgeInsets.zero,
+                  // crossAxisSpacing: 10,
+                  childAspectRatio: size.width / (size.height * 0.59),
+                  children: List.generate(
+                      _searchTextController!.text.isNotEmpty
+                          ? listProdcutSearch.length
+                          : allProducts.length, (index) {
+                    return ChangeNotifierProvider.value(
+                      value: _searchTextController!.text.isNotEmpty
+                          ? listProdcutSearch[index]
+                          : allProducts[index],
+                      child: const FeedsWidget(),
+                    );
+                  }),
+                ),
         ]),
       ),
     );
